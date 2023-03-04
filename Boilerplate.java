@@ -1,42 +1,53 @@
 import java.util.StringTokenizer;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 
-public class Boilerplate {
+public class Boilerplate{
 	public static void main(String[] args) throws IOException {
-		IoManager io = new IoManager();
-		io.close();
-	}
+		PrintWriter pw = new PrintWriter(System.out);
+		//BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader r = new BufferedReader(new FileReader("AirCownditioning/test/1.in"));
+		int testAmount = Integer.parseInt(r.readLine());
 
-	static class IoManager extends PrintWriter {
-		private BufferedReader r;
-		private StringTokenizer st;
+		int[] target = new int[testAmount];
+		StringTokenizer st = new StringTokenizer(r.readLine());
+		for (int t = 0; t < testAmount; t++) {
+			target[t] = Integer.parseInt(st.nextToken());
+		}
 		
-        // Default constructor
-		public IoManager() {
-			super(System.out);
-			r = new BufferedReader(new InputStreamReader(System.in));
+		int[] arr = new int[testAmount];
+		st = new StringTokenizer(r.readLine());
+		for (int t = 0; t < testAmount; t++) {
+			arr[t] = Integer.parseInt(st.nextToken());
 		}
 
-        // Constructor with custom files (for testing)
-        public IoManager(String input) throws IOException {
-			super(System.out);
-			r = new BufferedReader(new FileReader(input));
+		boolean finished = false;
+		int iters = 0;
+		while (!finished) {
+			finished = true;
+			int maxLength = 0;
+			int pos = 0;
+			for (int j = 0; j < arr.length; j++) {
+				if (arr[j] != target[j]) {
+					finished = false;
+					int length = 0;
+					for (int k = j; k < arr.length; k++) {
+						if (arr[k] == target[j]) {
+							break;
+						}
+						length++;
+					}
+					if (length > maxLength) {
+						maxLength = length;
+					}
+				}
+			}
+			iters++;
 		}
+		pw.println(iters);
+		pw.close();
+		r.close();
 
-		// returns null if no more input
-		public String next() {
-			try {
-				while (st == null || !st.hasMoreTokens())
-					st = new StringTokenizer(r.readLine());
-				return st.nextToken();
-			} catch (Exception e) { }
-			return null;
-		}
 
-		public int nextInt() { return Integer.parseInt(next()); }
 	}
 }
